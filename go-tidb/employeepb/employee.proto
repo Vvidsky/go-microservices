@@ -1,0 +1,25 @@
+syntax="proto3";
+
+option go_package = "go-tidb/employeepb";
+
+package employee;
+
+message Employee {
+    int32 empId = 1;
+    string empFName = 2;
+    string empLName = 3;
+    float salary = 4;
+}
+
+message GetEmployeeListRequest {
+    
+}
+
+message GetEmployeeListResponse {
+    Employee employee = 1;
+}
+
+
+service EmployeeService {
+    rpc GetEmployeeList (GetEmployeeListRequest) returns (stream GetEmployeeListResponse) {}
+}

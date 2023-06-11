@@ -1,0 +1,35 @@
+version: "3.5"
+services:
+  nats:
+    container_name: js
+    image: nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: "--name js --cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222 --routes nats://js1:6222 --routes nats://js2:6222 -js"
+    networks: [ "nats" ]
+    volumes:
+      - ./jetstream-cluster/js:/data
+  nats-1:
+    container_name: js1
+    image: nats
+    ports:
+      - "4223:4222"
+    command: "--name js1 --cluster_name NATS --cluster nats://0.0.0.0:6222 --routes=nats://ruser:T0pS3cr3t@nats:6222 -js"
+    networks: [ "nats" ]
+    depends_on: [ "nats" ]
+    volumes:
+      - ./jetstream-cluster/js1:/data
+  nats-2:
+    container_name: js2
+    ports:
+      - "4224:4222"
+    image: nats
+    command: "--name js2 --cluster_name NATS --cluster nats://0.0.0.0:6222 --routes=nats://ruser:T0pS3cr3t@nats:6222 -js"
+    networks: [ "nats" ]
+    depends_on: [ "nats" ]
+    volumes:
+      - ./jetstream-cluster/js2:/data
+networks:
+  nats:
+    name: nats
